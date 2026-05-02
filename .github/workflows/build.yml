@@ -74,12 +74,11 @@ jobs:
       - name: Run cppcheck
         run: |
           cppcheck \
-            --output-file=cppcheck_report.txt \
             --enable=warning,style,performance \
             --error-exitcode=1 \
             --suppress=missingIncludeSystem \
             --std=c99 \
-            src/
+            src/ 2> cppcheck_report.txt
 
       - name: Show cppcheck report
         if: always()
