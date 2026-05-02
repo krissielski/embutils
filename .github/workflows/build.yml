@@ -7,6 +7,8 @@ on:
     branches: [main]
 
 jobs:
+
+  # JOB #1:  BUILD
   build:
     runs-on: ubuntu-latest
 
@@ -58,7 +60,7 @@ jobs:
 
 
 
-
+  # JOB #2 Static Analysis (Runs on seperate VM)
   static-analysis:
     runs-on: ubuntu-latest
 
@@ -72,11 +74,24 @@ jobs:
       - name: Run cppcheck
         run: |
           cppcheck \
+            --output-file=cppcheck_report.txt \
             --enable=warning,style,performance \
             --error-exitcode=1 \
             --suppress=missingIncludeSystem \
             --std=c99 \
             src/
 
-          
+      - name: Show cppcheck report
+        if: always()
+        run: |
+          echo "=== cppcheck Report ==="
+          cat cppcheck_report.txt 2>/dev/null || echo "No cppcheck report found"
+
+      - name: Upload cppcheck report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: cppcheck-report-${{ github.run_number }}  
+          path: cppcheck_report.txt
+
         
