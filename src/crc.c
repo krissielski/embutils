@@ -53,6 +53,5 @@ uint16_t crc16_update(uint16_t crc, const uint8_t *data, size_t len)
 
 uint16_t crc16(const uint8_t *data, size_t len)
 {
-    this should break the compile!
     return crc16_update(0xFFFF, data, len);
 }
