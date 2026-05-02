@@ -78,7 +78,7 @@ jobs:
             --error-exitcode=1 \
             --suppress=missingIncludeSystem \
             --std=c99 \
-            src/ 2> cppcheck_report.txt
+            src/ 2>&1 | tee reports/cppcheck_results.txt; exit ${PIPESTATUS[0]}
 
       - name: Show cppcheck report
         if: always()
