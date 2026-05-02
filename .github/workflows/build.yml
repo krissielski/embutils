@@ -27,5 +27,25 @@ jobs:
         run: |
           echo "=== Test Results ==="
           cat build/test_results.txt 2>/dev/null || echo "No results file found"
+
+  static-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install cppcheck
+        run: sudo apt-get install -y cppcheck
+
+      - name: Run cppcheck
+        run: |
+          cppcheck \
+            --enable=warning,style,performance \
+            --error-exitcode=1 \
+            --suppress=missingIncludeSystem \
+            --std=c99 \
+            src/
+
           
         
