@@ -78,19 +78,6 @@ jobs:
             --error-exitcode=1 \
             --suppress=missingIncludeSystem \
             --std=c99 \
-            src/ 2>&1 | tee reports/cppcheck_results.txt; exit ${PIPESTATUS[0]}
-
-      - name: Show cppcheck report
-        if: always()
-        run: |
-          echo "=== cppcheck Report ==="
-          cat cppcheck_report.txt 2>/dev/null || echo "No cppcheck report found"
-
-      - name: Upload cppcheck report
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: cppcheck-report-${{ github.run_number }}  
-          path: cppcheck_report.txt
+            src/ 
 
         
