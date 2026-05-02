@@ -18,6 +18,8 @@
    - `static-analysis`
 7. Click **Create**
 
+## To prevent admins from pushing directly into main:
+- Do not allow bypassing the above settings 
 
 
 
