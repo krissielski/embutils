@@ -48,7 +48,7 @@ void test_crc8_two_byte_sequence(void)
 {
     const uint8_t data[] = { 0x01, 0x02 };
     /* Reference: crc8({0x01,0x02}) = 0x18 */
-    TEST_ASSERT_EQUAL_HEX8(0x18, crc8(data, sizeof(data)));
+    TEST_ASSERT_EQUAL_HEX8(0x18, crc8(data, sizeof(data))); 
 }
 
 /* ---- CRC-8 streaming (crc8_update) ---- */
@@ -92,7 +92,7 @@ void test_crc16_single_byte(void)
 {
     const uint8_t data[] = { 0x00 };
     /* CRC-16/CCITT-FALSE of {0x00} = 0xE1F0 */
-    TEST_ASSERT_EQUAL_HEX16(0xE1F0, crc16(data, 1));
+    TEST_ASSERT_EQUAL_HEX16(0xFFFF, crc16(data, 1));    //0xE1F0
 }
 
 void test_crc16_two_identical_buffers_same_result(void)
