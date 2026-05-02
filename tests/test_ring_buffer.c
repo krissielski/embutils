@@ -44,7 +44,7 @@ void test_rb_pop_single_byte(void)
 
     rb_push(&rb, 0xAB);
     TEST_ASSERT_TRUE(rb_pop(&rb, &out));
-    TEST_ASSERT_EQUAL_HEX8(0xFF, out);      //Was 0xAB
+    TEST_ASSERT_EQUAL_HEX8(0xAB, out); 
     TEST_ASSERT_EQUAL(0, rb_count(&rb));
     TEST_ASSERT_TRUE(rb_is_empty(&rb));
 }
