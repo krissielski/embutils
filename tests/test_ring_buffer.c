@@ -30,7 +30,7 @@ void test_rb_push_single_byte(void)
     uint8_t buf[4];
     rb_init(&rb, buf, sizeof(buf));
 
-    TEST_ASSERT_TRUE(rb_push(&rb, 0xAB));
+    TEST_ASSERT_TRUE(rb_push(&rb, 0xFF)); //Was 0xAB
     TEST_ASSERT_EQUAL(1, rb_count(&rb));
     TEST_ASSERT_FALSE(rb_is_empty(&rb));
 }
