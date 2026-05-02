@@ -2,6 +2,7 @@
 #
 # Usage:
 #   make              — build all test binaries
+#   make build        — build library object files
 #   make test         — build and run all tests
 #   make clean        — remove build artifacts
 #   make test_ring_buffer   — build/run one test suite
@@ -21,6 +22,7 @@ UNITY_SRC  = tests/unity/unity.c
 LIB_SRCS   = src/ring_buffer.c src/crc.c src/bit_utils.c
 
 BUILD_DIR  = build
+BUILD_STAMP = $(BUILD_DIR)/.dir
 
 # Derive object paths
 UNITY_OBJ  = $(BUILD_DIR)/unity.o
@@ -39,6 +41,9 @@ ALL_TESTS = $(TEST_RING_BUFFER) $(TEST_CRC) $(TEST_BIT_UTILS)
 
 .PHONY: all
 all: $(ALL_TESTS)
+
+.PHONY: build
+build: $(LIB_OBJS)
 
 # ---- Run all tests ----
 
@@ -76,28 +81,30 @@ test_bit_utils: $(TEST_BIT_UTILS)
 
 # ---- Build rules ----
 
-$(BUILD_DIR):
+
+$(BUILD_STAMP):
 	mkdir -p $(BUILD_DIR)
+	touch $@
 
-$(UNITY_OBJ): $(UNITY_SRC) tests/unity/unity.h tests/unity/unity_internals.h | $(BUILD_DIR)
+$(UNITY_OBJ): $(UNITY_SRC) tests/unity/unity.h tests/unity/unity_internals.h | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD_DIR)/ring_buffer.o: src/ring_buffer.c src/ring_buffer.h | $(BUILD_DIR)
+$(BUILD_DIR)/ring_buffer.o: src/ring_buffer.c src/ring_buffer.h | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD_DIR)/crc.o: src/crc.c src/crc.h | $(BUILD_DIR)
+$(BUILD_DIR)/crc.o: src/crc.c src/crc.h | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(BUILD_DIR)/bit_utils.o: src/bit_utils.c src/bit_utils.h | $(BUILD_DIR)
+$(BUILD_DIR)/bit_utils.o: src/bit_utils.c src/bit_utils.h | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 
-$(TEST_RING_BUFFER): tests/test_ring_buffer.c $(UNITY_OBJ) $(BUILD_DIR)/ring_buffer.o | $(BUILD_DIR)
+$(TEST_RING_BUFFER): tests/test_ring_buffer.c $(UNITY_OBJ) $(BUILD_DIR)/ring_buffer.o | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
-$(TEST_CRC): tests/test_crc.c $(UNITY_OBJ) $(BUILD_DIR)/crc.o | $(BUILD_DIR)
+$(TEST_CRC): tests/test_crc.c $(UNITY_OBJ) $(BUILD_DIR)/crc.o | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
-$(TEST_BIT_UTILS): tests/test_bit_utils.c $(UNITY_OBJ) $(BUILD_DIR)/bit_utils.o | $(BUILD_DIR)
+$(TEST_BIT_UTILS): tests/test_bit_utils.c $(UNITY_OBJ) $(BUILD_DIR)/bit_utils.o | $(BUILD_STAMP)
 	$(CC) $(CFLAGS) $(INCLUDES) $^ -o $@
 
 # ---- Clean ----
