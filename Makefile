@@ -23,6 +23,7 @@ LIB_SRCS   = src/ring_buffer.c src/crc.c src/bit_utils.c
 
 BUILD_DIR  = build
 BUILD_STAMP = $(BUILD_DIR)/.dir
+TEST_RESULTS = $(BUILD_DIR)/test_results.txt
 
 # Derive object paths
 UNITY_OBJ  = $(BUILD_DIR)/unity.o
@@ -48,22 +49,25 @@ build: $(LIB_OBJS)
 # ---- Run all tests ----
 
 .PHONY: test
-test: $(ALL_TESTS)
-	@echo ""
-	@echo "=========================================="
-	@echo " Running test_ring_buffer"
-	@echo "=========================================="
-	./$(TEST_RING_BUFFER)
-	@echo ""
-	@echo "=========================================="
-	@echo " Running test_crc"
-	@echo "=========================================="
-	./$(TEST_CRC)
-	@echo ""
-	@echo "=========================================="
-	@echo " Running test_bit_utils"
-	@echo "=========================================="
-	./$(TEST_BIT_UTILS)
+test: $(ALL_TESTS) | $(BUILD_STAMP)
+	@echo "Writing test output to $(TEST_RESULTS)"
+	@: > $(TEST_RESULTS)
+	@echo "" | tee -a $(TEST_RESULTS)
+	@echo "==========================================" | tee -a $(TEST_RESULTS)
+	@echo " Running test_ring_buffer" | tee -a $(TEST_RESULTS)
+	@echo "==========================================" | tee -a $(TEST_RESULTS)
+	@bash -o pipefail -c './$(TEST_RING_BUFFER) 2>&1 | tee -a "$(TEST_RESULTS)"'
+	@echo "" | tee -a $(TEST_RESULTS)
+	@echo "==========================================" | tee -a $(TEST_RESULTS)
+	@echo " Running test_crc" | tee -a $(TEST_RESULTS)
+	@echo "==========================================" | tee -a $(TEST_RESULTS)
+	@bash -o pipefail -c './$(TEST_CRC) 2>&1 | tee -a "$(TEST_RESULTS)"'
+	@echo "" | tee -a $(TEST_RESULTS)
+	@echo "==========================================" | tee -a $(TEST_RESULTS)
+	@echo " Running test_bit_utils" | tee -a $(TEST_RESULTS)
+	@echo "==========================================" | tee -a $(TEST_RESULTS)
+	@bash -o pipefail -c './$(TEST_BIT_UTILS) 2>&1 | tee -a "$(TEST_RESULTS)"'
+	@echo "Test output saved to $(TEST_RESULTS)"
 
 # ---- Individual test run targets ----
 
