@@ -71,6 +71,10 @@ jobs:
       - name: Install cppcheck
         run: sudo apt-get install -y cppcheck
 
+      # Note to self:
+      #   cppcheck does not output file (or at least non-errors to file)
+      #   and piping output caused all sorts of errors.   Gave up trying to
+      #   get cppcheck as an artifact.  
       - name: Run cppcheck
         run: |
           cppcheck \
