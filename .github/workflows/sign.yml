@@ -1,0 +1,35 @@
+name: Sign Firmware
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  sign:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install GCC
+        run: sudo apt-get install -y gcc make
+
+      - name: Build
+        run: make build
+
+      - name: Simulate firmware signing
+        env:
+          SIGN_KEY: ${{ secrets.FIRMWARE_SIGN_KEY }}
+        run: |
+          echo "Signing firmware with key: ${SIGN_KEY:0:4}****"
+          # In a real project:
+          # ./sign_tool --key "$SIGN_KEY" build/embutils.elf
+          echo "Signed firmware: build/embutils.signed.bin"
+          touch build/embutils.signed.bin
+
+      - name: Upload signed firmware
+        uses: actions/upload-artifact@v6
+        with:
+          name: signed-firmware
+          path: build/embutils.signed.bin
