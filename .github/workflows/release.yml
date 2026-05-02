@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'    # triggers on any tag starting with v (v1.0.0, v2.3.1, etc.)
+
+jobs:
+  build-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install GCC
+        run: sudo apt-get install -y gcc make
+
+
+      # Normally, you would run build, then run tests on that build
+      # However, for this demo, "build" and "test" are the same thing
+      - name: Run Build and Test
+        run: make test
+
+
+      # If Build and Test pass, make release
+      - name: Package library
+        run: |
+          mkdir -p release
+          cp src/*.h release/
+          cp build/*.o release/
+          tar -czf embutils-${{ github.ref_name }}.tar.gz release/
+          echo "Created embutils-${{ github.ref_name }}.tar.gz"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: embutils-${{ github.ref_name }}.tar.gz
+          generate_release_notes: true    # auto-generates changelog from PRs
+          fail_on_unmatched_files: true
