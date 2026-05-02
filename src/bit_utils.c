@@ -46,3 +46,12 @@ uint8_t count_set_bits(uint8_t val)
     }
     return count;
 }
+
+uint8_t bad_function(uint8_t val)
+{
+    uint8_t result;
+    if (val > 0) {
+        result = val & 0xFF;
+    }
+    return result;
+}
