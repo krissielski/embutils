@@ -22,12 +22,21 @@ jobs:
       - name: Build and Test
         run: make test
 
+
+      #------------------------------------------------------
+      # Makefile generates test_results in /build
+      # This "prints" it to cout so the github action can see it
+
       - name: Show test summary
         if: always()
         run: |
           echo "=== Test Results ==="
           cat build/test_results.txt 2>/dev/null || echo "No results file found"
       
+
+      #------------------------------------------------------
+      # Artifacts
+
       - name: Upload test results
         if: always()
         uses: actions/upload-artifact@v7
@@ -35,6 +44,19 @@ jobs:
           name: test-results-${{ github.run_number }}
           path: build/test_results.txt
           retention-days: 7
+
+      - name: Upload build binaries
+        if: success()
+        uses: actions/upload-artifact@v7
+        with:
+          name: embutils-binaries-${{ github.run_number }}
+          path: |
+            build/test_ring_buffer
+            build/test_crc
+            build/test_bit_utils
+          retention-days: 7
+
+
 
 
   static-analysis:
